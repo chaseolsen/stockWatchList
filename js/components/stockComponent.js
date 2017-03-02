@@ -3,12 +3,9 @@
 
   const app = angular.module('stockApp');
 
-  app.component('menuBar', {
-    bindings: {
-      brand: '='
-    },
+  app.component('stockContent', {
     templateUrl: '/js/components/stockComponent.html',
-    controller: myComponentCtrl
+    controller: myComponentCtrl,
   });
 
 // myComponentCtrl.$inject = ['$scope', '$timeout'];
@@ -46,12 +43,25 @@
       stockService.removeData(stockToRemove);
     }
 
+    $scope.getThing = function(){ // gets called with ng-click="getThing()"
+      $scope.theThing = stockService.getThing();
+      console.log($scope.theThing);
+    }
+
+    // $scope.getThing(); <<-- Gets it as soon as page this loads
+
 
 };
 // End of controller
 
 // My service
   app.service('stockService', function($http, $q){
+
+    var thing = "TREASURE!";
+
+    this.getThing = function(){ //<<-- Gets called from controller: $scope.theThing = stockService.getThing();
+      return thing; // <<-- Returns var thing = "TREASURE!";
+    }
 
   this.lessSpecific = function(stockReq){
 

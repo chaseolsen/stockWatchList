@@ -15,5 +15,17 @@
   "bugs": {
     "url": "https://github.com/chaseolsen/stockWatchList/issues"
   },
-  "homepage": "https://github.com/chaseolsen/stockWatchList#readme"
+  "homepage": "https://github.com/chaseolsen/stockWatchList#readme",
+  "dependencies": {
+    "@angular/common": "^2.4.8",
+    "@angular/core": "^2.4.8",
+    "@angular/platform-browser": "^2.4.8",
+    "@angular/router": "^3.4.8",
+    "axios": "^0.15.3",
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "mongoose": "^4.8.5",
+  }
 }

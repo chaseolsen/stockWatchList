@@ -1,13 +1,13 @@
 
 <h1>Welcome, {{$ctrl.testName}}</h1>
 <h2>Here is your list:</h2>
-<div ng-repeat="stock in $ctrl.stockList">
+<div ng-repeat="stock in stocks">
   <div class="stockName">
     {{stock.id}}
   </div>
   <div>
     <button class="btn btn-default" ng-click="lessSpecific(stock.id)">View</button>
-    <button class="btn btn-danger" ng-click="deleteStock(stock.id)">Delete</button>
+    <button class="btn btn-danger" ng-click="$ctrl.deleteStock(stock.id)">Delete</button>
   </div>
 </div>
 

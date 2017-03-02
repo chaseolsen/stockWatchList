@@ -16,51 +16,108 @@
   function myComponentCtrl(stockService, $http, $scope, $timeout) {
 
     this.testName = 'Chase';
-    $scope.data = stockService.getCharacter();
+    // $scope.data = stockService.getCharacter();
 
-    this.stockList = [{
-        id: 'nvidia'
-    }, {
-        id: 'apple'
-    }, {
-        id: 'amd'
-    }, {
-        id: 'amazon'
-    }, {
-        id: 'netflix'
-    }, {
-        id: 'starbucks'
-    }
- ];
-
-    this.addStock = function(newStockId){
-      console.log(newStockId);
-      this.stockList.push(newStockId);
+    $scope.getMyList = function(){
+      $scope.stocks = stockService.getMyList();
     }
 
-  };
+    $scope.getMyList();
 
+    $scope.lessSpecific = function(stockReq){
+      stockService.lessSpecific(stockReq).then(function(response){
+        $scope.stockReqData = response;
+
+      });
+    };
+
+    this.addStock = function(){
+      var newStock = {
+        id: $scope.newStockId
+      };
+      console.log(newStock);
+      if (stockService.addStock(newStock)){
+        $scope.newStockId = "";
+      }
+    };
+
+    this.deleteStock = function(stockToRemove){
+      console.log("In Controller, passing " + stockToRemove + " to stockService");
+      stockService.removeData(stockToRemove);
+    }
+
+
+};
+// End of controller
 
 // My service
-app.service('stockService', function($http, $q){
+  app.service('stockService', function($http, $q){
 
-  var stockService = {};
+  this.lessSpecific = function(stockReq){
 
-  stockService.data = {};
+    return $http({
+      method: 'GET',
+      url: 'http://dev.markitondemand.com/MODApis/Api/v2/lookup/json?input=' + stockReq
+    }).then(function(response){
+      var stockSymbol = response.data[0].Symbol;
+      var stockCompany = response.data[0].Name
 
-  stockService.getCharacter = function() {
-    $http.get('https://www.google.com/finance/info?q=NASDAQ:aapl').success(function(response){
-      var removedComment = response.split("//");
-      var newData = JSON.parse(removedComment[1]);
-      var symbol = newData[0];
-      console.log(symbol);
-      stockService.data.character = symbol;
-
+      return $http({
+        method: 'GET',
+        url: 'http://www.google.com/finance/info?q=NASDAQ:' + stockSymbol
+      }).then(function(response){
+        if (response.status === 200){
+          var total = response.data.split("//");
+          var newTotal = JSON.parse(total[1]);
+          var symbol = newTotal[0];
+          console.log(symbol);
+          return symbol;
+        }
+        return "Something went wrong";
+      });
     });
-    return stockService.data;
-  }
-  return stockService;
+  };
 
-});
+  var stocks = [{
+      id: 'apple'
+  }, {
+      id: 'amd'
+  }, {
+      id: 'amazon'
+  }, {
+      id: 'netflix'
+  }, {
+      id: 'starbucks'
+  }
+  ];
+
+  this.getMyList = function(){
+    return stocks;
+  }
+
+  this.addStock = function(newStock){
+    console.log(newStock);
+    if(newStock.id){
+      stocks.push(newStock);
+    }
+    return true;
+  };
+
+  this.removeData = function(stockToRemove){
+    console.log('In Service! Deleting ' + stockToRemove)
+    for (var i = 0; i < stocks.length; i++){
+      if (stocks[i].id === stockToRemove){
+        stocks.splice(i--, 1);
+      }
+    }
+    console.log("Done!");
+  }
+
+
+
+
+  });
+// End of Service
+
 
 })();

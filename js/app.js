@@ -14,12 +14,12 @@ angular.module('stockApp', ['ui.router']).config(function($urlRouterProvider, $s
 
    $urlRouterProvider.otherwise('/');
 
-   $stateProvider
-   .state('home', {
-     url: '/home',
-    //  controller: 'myComponentCtrl',
-     templateUrl: '/index.html'
-   })
+  //  $stateProvider
+  //  .state('home', {
+  //    url: '/home',
+  //   //  controller: 'myComponentCtrl',
+  //    templateUrl: '/index.html'
+  //  })
 
 
 });

@@ -12,22 +12,52 @@
 // My Controller
   function myComponentCtrl(stockService, $http, $scope, $timeout) {
 
-    this.testName = 'Chase';
-    // $scope.data = stockService.getCharacter();
 
+
+
+    //_______________Gets Stock List____________________
     $scope.getMyList = function(){
       $scope.stocks = stockService.getMyList();
     }
+    $scope.getMyList(); // Triggers function above to get list
 
-    $scope.getMyList();
 
+
+    $scope.myStocks = [
+    ];
+
+    //______Gets Data for Each Stock Immediately _______
+    $scope.getDataForEach = function(){
+
+      for(var i = 0; i < $scope.stocks.length; i++){
+      stockService.lessSpecific($scope.stocks[i].id).then(function(response){
+
+        var NewStock = {
+          name: response.t,
+          price: response.el
+        };
+
+        // $scope.myStocks.push(NewStock);
+
+
+        });
+      }
+    };
+
+    $scope.getDataForEach();
+
+
+
+    //_______________Gets Stock Data____________________
     $scope.lessSpecific = function(stockReq){
       stockService.lessSpecific(stockReq).then(function(response){
         $scope.stockReqData = response;
-
       });
     };
 
+
+
+    //_______Adds Stock Name to List(Object)_____________
     this.addStock = function(){
       var newStock = {
         id: $scope.newStockId
@@ -35,41 +65,44 @@
       console.log(newStock);
       if (stockService.addStock(newStock)){
         $scope.newStockId = "";
-      }
+      } else {};
+
+      $scope.getDataForEach();
+      console.log($scope.myStocks);
+
     };
 
+
+    //____________Deletes from Stocks_____________________
     this.deleteStock = function(stockToRemove){
       console.log("In Controller, passing " + stockToRemove + " to stockService");
       stockService.removeData(stockToRemove);
     }
 
-    $scope.getThing = function(){ // gets called with ng-click="getThing()"
-      $scope.theThing = stockService.getThing();
-      console.log($scope.theThing);
-    }
-
-    // $scope.getThing(); <<-- Gets it as soon as page this loads
 
 
 };
 // End of controller
 
+
+
+
+
+
+
+
 // My service
   app.service('stockService', function($http, $q){
 
-    var thing = "TREASURE!";
 
-    this.getThing = function(){ //<<-- Gets called from controller: $scope.theThing = stockService.getThing();
-      return thing; // <<-- Returns var thing = "TREASURE!";
-    }
-
+//_________Inputs name, then converts it to stock name and returns data_____________
   this.lessSpecific = function(stockReq){
-
     return $http({
       method: 'GET',
       url: 'http://dev.markitondemand.com/MODApis/Api/v2/lookup/json?input=' + stockReq
     }).then(function(response){
       var stockSymbol = response.data[0].Symbol;
+      // console.log(stockSymbol);
       var stockCompany = response.data[0].Name
 
       return $http({
@@ -80,13 +113,14 @@
           var total = response.data.split("//");
           var newTotal = JSON.parse(total[1]);
           var symbol = newTotal[0];
-          console.log(symbol);
+          // console.log(symbol);
           return symbol;
         }
         return "Something went wrong";
       });
     });
   };
+
 
   var stocks = [{
       id: 'apple'
@@ -106,7 +140,6 @@
   }
 
   this.addStock = function(newStock){
-    console.log(newStock);
     if(newStock.id){
       stocks.push(newStock);
     }

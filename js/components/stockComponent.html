@@ -1,21 +1,24 @@
 
-<h1>Welcome, {{$ctrl.testName}}</h1>
-<h2>Here is your list:</h2>
-<div ng-repeat="stock in stocks">
-  <div class="stockName">
-    {{stock.id}}
+<div class="container">
+
+<div class="col-md-6 listTab">
+  <h2>Your List</h2>
+  <div ng-repeat="stock in stocks">
+
+      <h2><strong>{{stock.id}}</strong><h2>
+
+    <div>
+      <button class="btn btn-default" ng-click="lessSpecific(stock.id)">View</button>
+      <button class="btn btn-danger" ng-click="$ctrl.deleteStock(stock.id)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete</button>
+    </div>
   </div>
-  <div>
-    <button class="btn btn-default" ng-click="lessSpecific(stock.id)">View</button>
-    <button class="btn btn-danger" ng-click="$ctrl.deleteStock(stock.id)">Delete</button>
-  </div>
+  <input type="text" class="form-control" ng-model="newStockId"></input>
+  <button class="btn btn-primary" ng-click="$ctrl.addStock()">Add to List</button>
 </div>
 
+<div class="col-md-6 infoTab">
+  <h2>Price: {{stockReqData.el}}</h2>
 
-<h2>Price: {{stockReqData.el}}</h2>
-<h2>{{data.character.el}}</h2>
 
-<input type="text" ng-model="newStockId"></input>
-<button ng-click="$ctrl.addStock()">Add to List</button>
-
-<button ng-click="getThing()">Find Treasure</button>
+</div>
+</div>
